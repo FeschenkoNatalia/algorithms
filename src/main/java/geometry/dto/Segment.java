@@ -29,6 +29,10 @@ public class Segment {
     return (end.y() - start.y()) / (end.x() - start.x());
   }
 
+  public double atan() {
+    return Math.atan2(end.x() - start.x(), end.y() - start.y());
+  }
+
   public static boolean isIntersect(Segment s1, Segment s2) {
     double a = s1.tg();
     double b = s2.tg();
@@ -83,6 +87,7 @@ public class Segment {
   public static Segment segment(double x1, double y1, double x2, double y2) {
     return new Segment(x1, y1, x2, y2);
   }
+
   public double startX() {
     return start.x();
   }
@@ -102,5 +107,9 @@ public class Segment {
   @Override
   public String toString() {
     return String.format("Segment{%.1f, %.1f; %.1f, %.1f}", startX(), startY(), endX(), endY());
+  }
+
+  public double dist() {
+    return Math.sqrt((startX() - endX())*(startX() - endX()) + (startY() - endY())* (startY() - endY()));
   }
 }
