@@ -6,22 +6,35 @@ import geometry.dto.Segment;
 
 import java.util.List;
 
+
 public class DrawHelper {
 
-  public static void drawSegment(Draw draw, Segment segment) {
-    draw.line(segment.startX(), segment.startY(), segment.endX(), segment.endY());
+  public Draw image;
+
+  public DrawHelper(Draw imgae) {
+    this.image = imgae;
   }
 
-  public static void drawSegments(Draw draw, Iterable<Segment> segments) {
+  public void draw(Segment segment) {
+    image.line(segment.startX(), segment.startY(), segment.endX(), segment.endY());
+  }
+
+  public void draw(Iterable<Segment> segments) {
+
     for (Segment s : segments) {
-      drawSegment(draw, s);
+      draw(s);
     }
   }
 
-  public static void drawPoints(Draw draw, List<Point> points, double radius) {
+  public void draw(Point point, double radius) {
+
+    image.filledCircle(point.x(), point.y(), radius);
+  }
+
+  public void draw(List<Point> points, double radius) {
 
     for (Point p : points) {
-      draw.filledCircle(p.x(), p.y(), radius);
+      draw(p, radius);
     }
   }
 

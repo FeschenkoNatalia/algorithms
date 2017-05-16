@@ -78,8 +78,8 @@ public class DelaunayConvexHullTriangulation extends ConvexHullTriangulation {
     draw.setXscale(0,800);
     draw.setYscale(0,600);
     draw.setPenColor(Color.RED);
-    DrawHelper.drawSegments(draw,segments);
+    /*DrawHelper.drawSegments(draw,segments);
     draw.setPenColor(Color.BLUE);
-    DrawHelper.drawPoints(draw,verteses,5.);
+    DrawHelper.drawPoints(draw,verteses,5.);*/
   }
 }

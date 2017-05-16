@@ -1,5 +1,9 @@
 package geometry.dto;
 
+import geometry.utils.VectorOperations;
+
+import static geometry.utils.VectorOperations.diff;
+
 public class Segment {
   private final Point start, end;
 
@@ -26,12 +30,14 @@ public class Segment {
   }
 
   public double tg() {
-    return (end.y() - start.y()) / (end.x() - start.x());
+    return Math.tan(atan());
   }
 
   public double atan() {
     return Math.atan2(end.x() - start.x(), end.y() - start.y());
   }
+
+  public double length(){return VectorOperations.length(diff(end, start));}
 
   public static boolean isIntersect(Segment s1, Segment s2) {
     double a = s1.tg();
@@ -73,13 +79,6 @@ public class Segment {
     return new Point((d - c) / (a - b), (a * d - b * c) / (a - b));
   }
 
-  public static void main(String[] args) {
-    Segment s1 = new Segment(1, 1, 3, 3);
-    Segment s2 = new Segment(1, 3, 3, 1);
-    Point point = intersect(s1, s2);
-    System.out.println(point);
-  }
-
   public static Segment segment(Point start, Point end) {
     return new Segment(start, end);
   }
@@ -109,7 +108,25 @@ public class Segment {
     return String.format("Segment{%.1f, %.1f; %.1f, %.1f}", startX(), startY(), endX(), endY());
   }
 
-  public double dist() {
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Segment)) return false;
+
+    Segment segment = (Segment) o;
+
+    if (start != null ? !start.equals(segment.start) : segment.start != null) return false;
+    return !(end != null ? !end.equals(segment.end) : segment.end != null);
+
+  }
+
+public double dist() {
     return Math.sqrt((startX() - endX())*(startX() - endX()) + (startY() - endY())* (startY() - endY()));
+  }
+  @Override
+  public int hashCode() {
+    int result = start != null ? start.hashCode() : 0;
+    result = 31 * result + (end != null ? end.hashCode() : 0);
+    return result;
   }
 }

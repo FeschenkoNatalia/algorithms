@@ -1,3 +1,5 @@
+package basic;
+
 public class Array {
 
   private int values[] = new int[10];

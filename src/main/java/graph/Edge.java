@@ -30,7 +30,7 @@ public class Edge implements Comparable<Edge> {
 
   @Override
   public int hashCode() {
-    return (v % 1000007)*31 + w;
+    return (Math.min(v,w) % 1000007)*31 + Math.max(v,w);
   }
 
   @Override
@@ -38,7 +38,9 @@ public class Edge implements Comparable<Edge> {
     if (obj == null) return false;
     if (!(obj instanceof Edge)) return false;
     Edge other = (Edge)obj;
-    return other.v == v && other.w == w && Double.compare(other.weight, weight) == 0;
+    return Math.min(other.v, other.w) == Math.min(v, w)
+        && Math.max(other.v, other.w) == Math.max(v, w);
+        //&& Double.compare(other.weight, weight) == 0;
   }
 
   public static Edge edge(Integer v, int w, double weight) {

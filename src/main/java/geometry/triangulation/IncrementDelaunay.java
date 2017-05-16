@@ -1,53 +1,19 @@
 package geometry.triangulation;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import geometry.dto.Point;
-import geometry.dto.Segment;
 import geometry.dto.Triangle;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static geometry.dto.Triangle.triangle;
 import static geometry.utils.VectorOperations.length;
 import static geometry.utils.VectorOperations.onSegment;
 
 
-public class IncrementDelaunay extends AbstractTriangulation implements Triangulation {
+public class IncrementDelaunay extends AbstractTriangulation {
 
   public IncrementDelaunay(List<Point> points) {
     super(points);
-  }
-
-  @Override
-  public Iterable<Triangle> triangulate(Iterable<Point> points) {
-    List<Triangle> result = Lists.newArrayList();
-    Triangle base = addBaseTriangle(points);
-
-    for (Point p : points) {
-      List<Triangle> oldTriangles = pointTriangles(p);
-      List<Triangle> newTriangles = Lists.newArrayList();
-
-      for (Triangle oldTriangle : oldTriangles) {
-        removeTriangle(oldTriangle);
-
-        for (Segment side : oldTriangle.sides()) {
-          if (onSegment(side, p)) continue;
-          Triangle newTriangle = triangle(side.start(), side.end(), p);
-          addTriangle(newTriangle);
-          newTriangles.add(newTriangle);
-        }
-      }
-
-      newTriangles.forEach(this::improveTriangles);
-    }
-
-    for (Point v : base.vertexes()) {
-      for (Triangle T : pointTriangles(v)) {
-        removeTriangle(T);
-      }
-    }
-    return result;
   }
 
   @Override
@@ -55,37 +21,42 @@ public class IncrementDelaunay extends AbstractTriangulation implements Triangul
 
     Triangle base = addBaseTriangle(points);
 
+    Point[] baseVerteses = new Point[]{base.vertex(0), base.vertex(1), base.vertex(2)};
+
     for (Point p : points) {
-      List<Triangle> oldTriangles = pointTriangles(p);
-      List<Triangle> newTriangles = Lists.newArrayList();
 
-      for (Triangle oldTriangle : oldTriangles) {
-        removeTriangle(oldTriangle);
+      List<Triangle> oldTs = this.pointTriangles(p);
+      List<Triangle> newTs = new ArrayList();
 
-        for (Segment side : oldTriangle.sides()) {
-          if (onSegment(side, p)) continue;
-          Triangle newTriangle = triangle(side.start(), side.end(), p);
-          addTriangle(newTriangle);
-          newTriangles.add(newTriangle);
+      for (Triangle To : oldTs) {
+
+        removeTriangle(To);
+
+        for (int i = 0; i < 3; i++) {
+          if (onSegment(To.side(i), p)) continue;
+          Triangle Tn = new Triangle(To.vertex(i), To.vertex(i + 1), p);
+          addTriangle(Tn);
+          newTs.add(Tn);
         }
       }
 
-      newTriangles.forEach(this::improveTriangles);
+      for (Triangle T : newTs) improveTriangles(T);
     }
 
-    for (Point v : base.vertexes()) {
-      for (Triangle T : pointTriangles(v)) {
-        removeTriangle(T);
+    for (Point v : baseVerteses) {
+      List<Triangle> Ts = this.pointTriangles(v);
+      for (Triangle T : Ts) {
+        this.removeTriangle(T);
       }
     }
+
   }
 
 
-  protected Triangle addBaseTriangle(Iterable<Point> points) {
+  protected Triangle addBaseTriangle(List<Point> points) {
 
-    Point first = Iterables.getFirst(points, null);
-    double max_x = first.x(), min_x = first.x(),
-        max_y = first.y(), min_y = first.y();
+    double max_x = points.get(0).x(), min_x = points.get(0).x(),
+        max_y = points.get(0).y(), min_y = points.get(0).y();
 
     for (Point p : points) {
       max_x = p.x() > max_x ? p.x() : max_x;
@@ -94,7 +65,7 @@ public class IncrementDelaunay extends AbstractTriangulation implements Triangul
       min_y = p.y() < min_y ? p.y() : min_y;
     }
 
-    double R = 0.50d * length(new Point(max_x - min_x, max_y - min_y));
+    double R = 1.5 * length(new Point(max_x - min_x, max_y - min_y));
     Point c = new Point(0.50d * (max_x + min_x), 0.50d * (max_y + min_y));
 
     Point A = new Point(c.x() - Math.sqrt(3.00d) * R, c.y() - R),

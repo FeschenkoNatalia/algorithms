@@ -96,9 +96,9 @@ public class ConvexHullTriangulation extends AbstractTriangulation {
     draw.setXscale(0, 800);
     draw.setYscale(0, 600);
     draw.setPenColor(Color.RED);
-    DrawHelper.drawSegments(draw, segments);
+  /*  DrawHelper.draw(draw, segments);
     draw.setPenColor(Color.BLUE);
-    DrawHelper.drawPoints(draw, verteses, 5.);
+    DrawHelper.drawPoints(draw, verteses, 5.);*/
   }
 
 }

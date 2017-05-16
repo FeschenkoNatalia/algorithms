@@ -2,9 +2,9 @@ package geometry.dto;
 
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static geometry.dto.Point.point;
 import static geometry.dto.Segment.segment;
 import static geometry.utils.Determinant.det;
 import static geometry.utils.VectorOperations.diff;
@@ -17,7 +17,7 @@ public class Triangle {
 
   private Triangle[] neighbors = new Triangle[3];
 
-  private Point incenter = null;
+  private Point center = null;
 
   public Triangle(Point p_i, Point p_j, Point p_k) {
 
@@ -33,12 +33,12 @@ public class Triangle {
   }
 
   public List<Segment> sides() {
-    List<Segment> sides = new ArrayList<>();
-    sides.add(segment(vertex(0), vertex(1)));
-    sides.add(segment(vertex(1), vertex(2)));
-    sides.add(segment(vertex(2), vertex(0)));
-    return sides;
+    return Lists.newArrayList(
+        segment(vertex(0), vertex(1)),
+        segment(vertex(1), vertex(2)),
+        segment(vertex(2), vertex(0)));
   }
+
 
   public Segment side(int i) {
     return new Segment(vertex(i), vertex(i + 1));
@@ -71,7 +71,7 @@ public class Triangle {
 
   public Point centroid() {
 
-    if (incenter != null) return incenter;
+    if (center != null) return center;
 
     double xA = vertexes[0].x(), yA = vertexes[0].y(),
         xB = vertexes[1].x(), yB = vertexes[1].y(),
@@ -88,7 +88,7 @@ public class Triangle {
         {xC, yC, 1.0}};
     double Dx = det(Mx, 3), Dy = det(My, 3), D = det(M, 3);
 
-    return new Point(-0.5 * Dx / D, 0.5 * Dy / D);
+    return point(-0.5 * Dx / D, 0.5 * Dy / D);
   }
 
   private int index(int i) {
@@ -101,6 +101,6 @@ public class Triangle {
   }
 
   public static Triangle triangle(Point start, Point end, Point p) {
-    return new Triangle(start, end , p);
+    return new Triangle(start, end, p);
   }
 }

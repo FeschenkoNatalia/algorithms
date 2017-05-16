@@ -1,10 +1,8 @@
 
 
 
-import org.junit.Assert;
+import basic.Array;
 import org.junit.Test;
-
-import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
